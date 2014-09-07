@@ -16,6 +16,10 @@ module AccessControl
     initializer :append_routes do |app|
       Rails::Application::Configuration.send :include, AccessControl::Engine.routes.url_helpers
     end
+    
+    initializer :append_asset_path do |app|
+      app.config.assets.precompile += %w( access_control/*.js access_control/*.css )
+    end
   end
   
 end

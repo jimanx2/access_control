@@ -5,7 +5,6 @@ module AccessControl
     include ApplicationControllerExtension
     layout 'home'
     
-    before_action :authenticate!
     before_action :default_variables
     
     def default_variables

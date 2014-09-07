@@ -12,12 +12,13 @@ module AccessControl
   end
 
   class Configuration
-    attr_accessor :superadmin_role, :userclass, :roleclass, :acl_exit_path
+    attr_accessor :superadmin_role, :userclass, :roleclass, :acl_exit_path, :user_display_field
 
     def initialize
       @superadmin_role = 'Superadmin'
       @userclass = :user
       @roleclass = :role
+      @user_display_field = :email
       @acl_exit_path = '/'
     end
   end
@@ -69,7 +70,7 @@ module AccessControl
     protected
     def get_current_user
       begin
-        eval("current_#{AccessControl.configuration.userclass.to_s}")
+        user = eval("current_#{AccessControl.configuration.userclass.to_s}")
       rescue NameError
         raise "Cannot access current_#{AccessControl.configuration.userclass.to_s}. Perhaps you have missed one of the following:\n\n" <<
               "1. Ensuring config.userclass points to correct model. You can do this in an initializer like follows:\n\n"<<
@@ -79,23 +80,22 @@ module AccessControl
               "2. Defining the model for Devise itself. You can do like the following in your terminal: \n\n" <<
               "your/rails/app #> rails g devise YourDeviseModel (e.g User) \n" <<
               "your/rails/app #> rake db:migrate\n"
-               
       end
     end
     
     protected
     def get_user_role(user)
-      begin
+      #begin
       user.send(AccessControl.configuration.roleclass)
-      rescue NoMethodError
-        raise "Cannot access #{AccessControl.configuration.roleclass.to_s} attribute of model " <<    
-              "#{AccessControl.configuration.userclass.to_s.camelize}. Did you: \n\n" <<
-              "1. Forget to define required relationship?\n" <<
-              "2. Default config.roleclass is set to :role so you might have to change it in related initializer:\n\n"<<
-              "AccessControl.configuration.do |config|\n" <<
-              "\tconfig.roleclass = :your_role_class\n" <<
-              "end\n\n"
-      end
+      #rescue NoMethodError
+      #  raise "Cannot access #{AccessControl.configuration.roleclass.to_s} attribute of model " <<    
+      #        "#{AccessControl.configuration.userclass.to_s.camelize}. Did you: \n\n" <<
+      #        "1. Forget to define required relationship?\n" <<
+      #        "2. Default config.roleclass is set to :role so you might have to change it in related initializer:\n\n"<<
+      #        "AccessControl.configuration.do |config|\n" <<
+      #        "\tconfig.roleclass = :your_role_class\n" <<
+      #        "end\n\n"
+      #end
     end
   end
   
@@ -121,7 +121,15 @@ module AccessControl
       end
       
       def acl_verifyroute!
-        unless permitted?(request.env['PATH_INFO'], get_current_user )
+        current_user = get_current_user
+        if current_user.nil?
+          redirect_to Rails.application.routes.url_helpers.new_user_session_path
+          return
+        end
+        if request.env['PATH_INFO'] == access_denied_page_path
+          return
+        end
+        unless permitted?(request.env['PATH_INFO'],  current_user )
           flash[:warning] = "You are not authorized to access that page <!--#{params[:controller]}##{params[:action]}-->"
           if request.format == 'html'
             redirect_to Rails.application.routes.url_helpers.access_denied_page_path 
