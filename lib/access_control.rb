@@ -117,7 +117,6 @@ module AccessControl
     include AccessControl::PermissionHelper
     def self.included(base)
       base.instance_eval do 
-      
         before_filter :acl_verifyroute!
       end
       
