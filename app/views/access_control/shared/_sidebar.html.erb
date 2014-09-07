@@ -13,22 +13,21 @@
             <li>
                 <a href="#"><i class="fa fa-tasks fa-fw"></i> 
                 Modules
-                <% unless @modules.empty? %><span class="fa arrow"></span><% end %>
+                <span class="fa arrow"></span>
                 </a>
-                <% unless @modules.empty? %>
                 <ul class="nav nav-second-level">
+                  <% unless @modules.empty? %>
                   <% @modules.each do |mod| %>
                   <li>
                       <a href="<%= edit_module_path mod %>"><%= mod.name %></a>
                   </li>
-                  <% end %>
+                  <% end; end %>
                   <% menuitem_for new_module_path do %>
                   <li>
                       <a href="#" data-toggle="modal" data-target=".add_module"><i class="fa fa-asterisk"></i> Define Module</a>
                   </li>
                   <% end %>
                 </ul>
-                <% end %>
                 <!-- /.nav-second-level -->
             </li>
             <% end %>
