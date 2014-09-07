@@ -126,7 +126,7 @@ module AccessControl
           redirect_to Rails.application.routes.url_helpers.new_user_session_path
           return
         end
-        if request.env['PATH_INFO'] == access_denied_page_path
+        if request.env['PATH_INFO'] == Rails.application.routes.url_helpers.access_denied_page_path 
           return
         end
         unless permitted?(request.env['PATH_INFO'],  current_user )
