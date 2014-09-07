@@ -23,7 +23,7 @@ module AccessControl
   end
   
   module PermissionHelper
-  
+    
     protected
     def get_named_route(url)
       begin 
@@ -36,7 +36,7 @@ module AccessControl
     
     protected
     def permitted?(path, user)
-      if user.send(AccessControl.configuration.roleclass.to_s).name == AccessControl.configuration.superadmin_role
+      if get_user_role(user).name == AccessControl.configuration.superadmin_role
         return true 
       end
       # check for module permission first
@@ -56,7 +56,7 @@ module AccessControl
       # find for permission for user first
       userpermit = permit.where('requester_type = ? AND requester_id = ?', 'User', user.id)
       rolepermit = permit.where(
-        'requester_type = ? AND requester_id = ?', 'Role', user.send(AccessControl.configuration.roleclass.to_s).id
+        'requester_type = ? AND requester_id = ?', 'Role', get_user_role(user).id
       )
       
       unless userpermit.empty?
@@ -65,6 +65,38 @@ module AccessControl
       
       return rolepermit.pluck(:allow).inject(:|)
     end
+    
+    protected
+    def get_current_user
+      begin
+        eval("current_#{AccessControl.configuration.userclass.to_s}")
+      rescue NameError
+        raise "Cannot access current_#{AccessControl.configuration.userclass.to_s}. Perhaps you have missed one of the following:\n\n" <<
+              "1. Ensuring config.userclass points to correct model. You can do this in an initializer like follows:\n\n"<<
+              "AccessControl.configuration.do |config|\n" <<
+              "\tconfig.userclass = :your_user_class\n" <<
+              "end\n\n" <<
+              "2. Defining the model for Devise itself. You can do like the following in your terminal: \n\n" <<
+              "your/rails/app #> rails g devise YourDeviseModel (e.g User) \n" <<
+              "your/rails/app #> rake db:migrate\n"
+               
+      end
+    end
+    
+    protected
+    def get_user_role(user)
+      begin
+      user.send(AccessControl.configuration.roleclass)
+      rescue NoMethodError
+        raise "Cannot access #{AccessControl.configuration.roleclass.to_s} attribute of model " <<    
+              "#{AccessControl.configuration.userclass.to_s.camelize}. Did you: \n\n" <<
+              "1. Forget to define required relationship?\n" <<
+              "2. Default config.roleclass is set to :role so you might have to change it in related initializer:\n\n"<<
+              "AccessControl.configuration.do |config|\n" <<
+              "\tconfig.roleclass = :your_role_class\n" <<
+              "end\n\n"
+      end
+    end
   end
   
   module TemplateHelper
@@ -72,12 +104,12 @@ module AccessControl
     
     def menuitem_for(href, &block)
       @url = href
-      yield if permitted?(href, eval("current_#{AccessControl.configuration.userclass.to_s}") )
+      yield if permitted?(href, get_current_user )
     end
     
     def element_for (href, &block)
       @ret = href
-      yield if permitted?(href, eval("current_#{AccessControl.configuration.userclass.to_s}") )
+      yield if permitted?(href, get_current_user )
     end
   end
   
@@ -85,11 +117,12 @@ module AccessControl
     include AccessControl::PermissionHelper
     def self.included(base)
       base.instance_eval do 
+      
         before_filter :acl_verifyroute!
       end
       
       def acl_verifyroute!
-        unless permitted?(request.env['PATH_INFO'], eval("current_#{AccessControl.configuration.userclass.to_s}") )
+        unless permitted?(request.env['PATH_INFO'], get_current_user )
           flash[:warning] = "You are not authorized to access that page <!--#{params[:controller]}##{params[:action]}-->"
           if request.format == 'html'
             redirect_to Rails.application.routes.url_helpers.access_denied_page_path 
@@ -100,6 +133,5 @@ module AccessControl
         end
       end
     end
-
   end
 end

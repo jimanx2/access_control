@@ -7,6 +7,14 @@ module AccessControl
       ActiveSupport.on_load :action_view do
         include AccessControl::TemplateHelper
       end
+      
+      AccessControl.configure do |config|  
+        config.superadmin_role = "Administrator"
+        config.userclass = :user
+        config.roleclass = :role
+        config.acl_exit_path = '/'
+      end
     end
+    
   end
 end
