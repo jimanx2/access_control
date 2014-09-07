@@ -1,0 +1,19 @@
+<div class="<%= modalname %> modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    <%= yield %>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<script type="text/javascript">
+  document.onready = function(){
+    $('.modal').each(function(){
+      $(this).on('hidden.bs.modal', function(e){
+        $(this).removeData();
+      });
+      $(this).on('shown.bs.modal', function (e) {
+        $(".chosen-select").chosen("destroy").chosen()
+      })
+    });
+  }
+</script>

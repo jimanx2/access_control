@@ -1,0 +1,51 @@
+<%= form_tag permissions_path, :method => :post do %>
+<div class="modal-header bg-primary lter" style="border-radius: 3px 3px 0 0">
+  <h4 class="modal-title"><strong>Create Permission</strong></h4>
+</div>
+<div class="modal-body">
+  <div class="row">
+    <div class="form-group">
+      <label class="col-xs-4">Pick Route</label>
+      <div class="col-xs-8">
+        <select name="route_path[]" data-ride="chosen" multiple>
+        <% @routes.each do |r| 
+          next if r == "#"
+        %>
+        <option value="<%= r %>"><%= r %></option>
+        <% end %>
+        </select>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="form-group">
+      <label class="col-xs-4">Requester</label>
+      <div class="col-xs-8">
+        <select name="requester_type" data-ride="chosen">
+        <% @requester.each do |rq|%>
+        <option value="<%= rq.id %>|<%= rq.class.name %>"><%= rq.name %></option>
+        <% end %>
+        </select>
+      </div>
+    </div>
+  </div>
+  
+  <br>
+  <div class="row">
+    <div class="form-group">
+      <label class="col-xs-4">Action?</label>
+      <div class="col-xs-8">
+        <select name="allow" data-ride="chosen">
+          <option value="true">ALLOW</option>
+          <option value="false">DENY</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+  <%= submit_tag 'Submit', :class => "btn btn-primary", :data => { :confirm => "Are you sure?" } %>
+</div>
+<% end %>

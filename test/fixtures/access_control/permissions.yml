@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  requester_type: MyString
+  requester_id: 1
+  route_path: MyString
+  allow: false
+
+two:
+  requester_type: MyString
+  requester_id: 1
+  route_path: MyString
+  allow: false

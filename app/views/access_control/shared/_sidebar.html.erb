@@ -1,0 +1,39 @@
+<div class="navbar-default sidebar" role="navigation">
+    <div class="sidebar-nav navbar-collapse">
+        <ul class="nav" id="side-menu">
+            <li>
+                <a href="<%= root_path %>"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+            </li>
+            <% menuitem_for permissions_path do %>
+            <li>
+                <a href="<%= @url %>" class="<%= @pathname.include?(permissions_path) ? "active" : "" %>"><i class="fa fa-key fa-fw"></i> Permissions</a>
+            </li>
+            <% end %>
+            <% menuitem_for modules_path do %>
+            <li>
+                <a href="#"><i class="fa fa-tasks fa-fw"></i> 
+                Modules
+                <% unless @modules.empty? %><span class="fa arrow"></span><% end %>
+                </a>
+                <% unless @modules.empty? %>
+                <ul class="nav nav-second-level">
+                  <% @modules.each do |mod| %>
+                  <li>
+                      <a href="<%= edit_module_path mod %>"><%= mod.name %></a>
+                  </li>
+                  <% end %>
+                  <% menuitem_for new_module_path do %>
+                  <li>
+                      <a href="#" data-toggle="modal" data-target=".add_module"><i class="fa fa-asterisk"></i> Define Module</a>
+                  </li>
+                  <% end %>
+                </ul>
+                <% end %>
+                <!-- /.nav-second-level -->
+            </li>
+            <% end %>
+        </ul>
+    </div>
+    <!-- /.sidebar-collapse -->
+</div>
+<!-- /.navbar-static-side -->

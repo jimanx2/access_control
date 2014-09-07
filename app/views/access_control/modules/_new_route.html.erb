@@ -1,0 +1,38 @@
+<%= form_tag module_routes_path, :method => :post do %>
+<div class="modal-header bg-primary lter" style="border-radius: 3px 3px 0 0">
+  <h4 class="modal-title"><strong>Insert Route Into Module</strong></h4>
+</div>
+<div class="modal-body">
+  <input type="hidden" name="module_id" value="<%= @mod.id%>" />
+  <div class="row">
+    <div class="form-group">
+      <label class="col-xs-4">Pick Route</label>
+      <div class="col-xs-8">
+        <select name="route_path[]" data-ride="chosen" multiple>
+        <% @routes.each do |r| 
+          next if r == "#"
+        %>
+        <option value="<%= r %>"><%= r %></option>
+        <% end %>
+        </select>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="form-group">
+      <label class="col-xs-4">
+        Or Type @ElementName
+        <p class="help-block">separated by (;)</p>
+      </label>
+      <div class="col-xs-8">
+        <input type="text" class="form-control" name="element_name" />
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+  <%= submit_tag 'Submit', :class => "btn btn-primary", :data => { :confirm => "Are you sure?" } %>
+</div>
+<% end %>
