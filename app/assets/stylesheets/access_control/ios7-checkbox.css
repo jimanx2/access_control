@@ -21,7 +21,7 @@ input[type="checkbox"].ios-switch:checked + div {
 	background-position: 0 0;
 	background-color: #3b89ec;
 	border: 1px solid #0e62cd;
-	box-shadow: inset 0 0 0 10px rgba(59,137,259,1);
+	box-shadow: inset 0 0 0 10px rgba(59,137,255,1);
 }
 
 /* Tiny Track */
