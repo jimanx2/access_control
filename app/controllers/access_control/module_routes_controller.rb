@@ -10,12 +10,16 @@ module AccessControl
         return
       end
       
-      params[:route_path].each do |rp|
-        ModuleRoute.create(:module_id => params[:module_id], :route_path => rp)  
+      if params[:route_path].present?
+        params[:route_path].each do |rp|
+          ModuleRoute.create(:module_id => params[:module_id], :route_path => rp)  
+        end
       end
       
-      params[:element_name].split(';').each do |en|
-        ModuleRoute.create(:module_id => params[:module_id], :route_path => en)  
+      if params[:element_name].present?
+        params[:element_name].split(';').each do |en|
+          ModuleRoute.create(:module_id => params[:module_id], :route_path => en)  
+        end
       end
       
       redirect_to request.referer
