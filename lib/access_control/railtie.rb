@@ -16,10 +16,14 @@ module AccessControl
         config.user_display_field = :email
       end
       
-      config.after_initialize do 
-        eval(AccessControl.configuration.userclass.to_s.camelize).class_eval do 
-          def name
-            eval(AccessControl.configuration.user_display_field.to_s)
+      config.after_initialize do
+        classstr = AccessControl.configuration.userclass.to_s.camelize
+        if local_variables.include?(classstr)
+          userclass = eval(classstr)
+          userclass.class_eval do 
+            def name
+              eval(AccessControl.configuration.user_display_field.to_s)
+            end
           end
         end
       end
