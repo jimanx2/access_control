@@ -1,0 +1,6 @@
+Description:
+    rails generate access_control [Name Of User Model] [Name of Role Model]
+
+Example:
+    rails generate access_control User Role
+
