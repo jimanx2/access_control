@@ -1,3 +1,5 @@
+[![Build Status](https://drone.io/github.com/jimanx2/access_control/status.png)](https://drone.io/github.com/jimanx2/access_control/latest)
+
 access_control
 ==============
 
