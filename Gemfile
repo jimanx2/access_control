@@ -14,3 +14,5 @@ gemspec
 # gem 'debugger'
 
 gem "twitter-bootstrap-rails"
+gem "sqlite3"
+
