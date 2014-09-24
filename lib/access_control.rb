@@ -115,28 +115,17 @@ module AccessControl
   
   module ApplicationControllerExtension
     include AccessControl::PermissionHelper
-    def self.included(base)
-      base.instance_eval do 
-        before_filter :acl_verifyroute!
-      end
-      
-      def acl_verifyroute!
-        current_user = get_current_user
-        if current_user.nil?
-          redirect_to Rails.application.routes.url_helpers.new_user_session_path
+    
+    def acl_verifyroute!
+      ActiveSupport.run_load_hooks :acl_extension, self
+      current_user = get_current_user
+      unless permitted?(request.env['PATH_INFO'],  current_user )
+        flash[:warning] = "You are not authorized to access that page <!--#{params[:controller]}##{params[:action]}-->"
+        if request.format == 'html'
+          redirect_to Rails.application.routes.url_helpers.access_denied_page_path 
+        else
+          render json: flash[:warning], :status => 422
           return
-        end
-        if request.env['PATH_INFO'] == Rails.application.routes.url_helpers.access_denied_page_path 
-          return
-        end
-        unless permitted?(request.env['PATH_INFO'],  current_user )
-          flash[:warning] = "You are not authorized to access that page <!--#{params[:controller]}##{params[:action]}-->"
-          if request.format == 'html'
-            redirect_to Rails.application.routes.url_helpers.access_denied_page_path 
-          else
-            render json: flash[:warning], :status => 422
-            return
-          end
         end
       end
     end

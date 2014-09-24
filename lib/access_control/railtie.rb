@@ -8,6 +8,14 @@ module AccessControl
         include AccessControl::TemplateHelper
       end
       
+      ActiveSupport.on_load :acl_extension do |app|
+        all_filters = app._process_action_callbacks.map(&:filter)
+      end
+      
+      ActiveSupport.on_load :action_controller do |app|
+        include AccessControl::ApplicationControllerExtension 
+      end
+      
       AccessControl.configure do |config|  
         config.superadmin_role = "Administrator"
         config.userclass = :user

@@ -6,6 +6,7 @@ module AccessControl
     layout 'home'
     
     before_action :default_variables
+    before_filter :store_location, :authenticate_user!, :acl_verifyroute!
     
     def default_variables
       @pathname = request.env['PATH_INFO']
@@ -21,5 +22,19 @@ module AccessControl
       @elements = @elements.collect(&:route_path)
       @menus = []
     end
+    
+    def store_location
+      return unless request.get? 
+      if (request.path != "/users/sign_in" &&
+          request.path != "/users/sign_up" &&
+          request.path != "/users/password/new" &&
+          request.path != "/users/password/edit" &&
+          request.path != "/users/confirmation" &&
+          request.path != "/users/sign_out" &&
+          !request.xhr?) # don't store ajax calls
+        session[:previous_url] = request.fullpath 
+      end
+    end
+    
   end
 end
