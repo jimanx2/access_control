@@ -21,7 +21,8 @@ class AccessControlGenerator < Rails::Generators::NamedBase
       "belongs_to :#{role_model.downcase}\n
        def name
         \"edit me in app/models/#{class_name.downcase}.rb\"
-       end"
+       end
+      "
     end
     
     generate "migration add_#{role_model.downcase}_id_to_#{file_name} role_id:integer"
