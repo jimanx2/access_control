@@ -1,5 +1,4 @@
 [![Build Status](https://drone.io/github.com/jimanx2/access_control/status.png)](https://drone.io/github.com/jimanx2/access_control/latest)
-
 [![Coverage Status](https://coveralls.io/repos/jimanx2/access_control/badge.png?branch=master)](https://coveralls.io/r/jimanx2/access_control?branch=master)
 
 access_control
