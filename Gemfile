@@ -16,3 +16,8 @@ gemspec
 gem "twitter-bootstrap-rails"
 gem "sqlite3"
 
+group :test, :development do
+  gem 'capybara'
+  gem 'factory_girl'
+  gem 'coveralls', require: false
+end
