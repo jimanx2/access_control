@@ -77,7 +77,7 @@ Usage
 When you have successfully followed steps above, you can use the ACL functions in your application like this: 
 (e.g in `application_controller.rb`)
 
-> permitted? "&lt;route name&gt;" current_user
+> permitted? "&lt;route name&gt;", current_user
 
 The use of *current_user* variable depends on your devise settings.
 
