@@ -21,7 +21,7 @@ Getting Started - Configuration
 
  First let's create our new rails application (in terminal of course). Let's say the app name is -- acl_control
  
- > rails new acl_control --skip-bundle
+ > rails new acl_control --skip-bundle <br>
  > cd acl_control
 
 Next, lets edit our Gemfile (any plain text editor would do), it should look like this:
