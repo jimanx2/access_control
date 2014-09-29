@@ -21,8 +21,7 @@ class AccessControlGenerator < Rails::Generators::NamedBase
       "belongs_to :#{role_model.downcase}\n
        def name
         \"edit me in app/models/#{class_name.downcase}.rb\"
-       end
-      "
+       end"
     end
     
     generate "migration add_#{role_model.downcase}_id_to_#{file_name} role_id:integer"
@@ -40,8 +39,6 @@ class AccessControlGenerator < Rails::Generators::NamedBase
       #{role_model.titlecase}.create(:name => "Administrator", :code => "SA")
       #{class_name}.create(:email => "admin@yoursite.com", :password => "password", :#{role_model.downcase}_id => #{role_model.titlecase}.find_by(:name => "Administrator").id)      
     FILE
-    
-    append_file "app/models/"
     
     route "get '/access-denied' => 'pages#access_denied', :as => :access_denied_page"
   end
