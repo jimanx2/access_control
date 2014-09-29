@@ -183,3 +183,14 @@ Select the action (either ALLOW, or DENY). Then click submit button. click on "O
 To change the permission value of it, you can slide/click on the green switch beside the Permission column of the table.
 
 And that's it. You're done.
+
+**Customizing Settings**
+
+If you have models other than in the instruction, you will need to change appropriate values in `config/initializers/access_control.rb`.
+
+AccessControl.configure do |config| <br>
+  config.superadmin_role = "Administrator" # value of "name column in roles table"<br>
+  config.userclass = :user # use User model, users table<br>
+  config.roleclass = :role # use Role model, Role table<br>
+  config.acl_exit_path = '/' # sets the location of "Back to User Dashboard" button in the manager page <br>
+end 
