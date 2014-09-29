@@ -32,7 +32,7 @@ Now uncomment "gem 'therubyracer', platforms: :ruby" line (because of requiremen
 
 Next, add the following lines at the end of the file:
 
-> gem "access_control", :github => "jimanx2/access_control"
+> gem "access_control", :github => "jimanx2/access_control"<br>
 > gem "devise" # requirement #3
 
 Having that done, save the file. Back to the terminal, run the following:
@@ -91,8 +91,8 @@ Now every actions of your controllers will be filtered by AccessControl dependin
 
 Rails comes with the `skip_before_filter` method which lets you to bypass either or both `authenticate_user!` / `acl_verifyroute!` filter. Let's say you have a PostsController with action `show`, so your `posts_controller.rb` file should start with this:
 
-> class PostsController < ApplicationController
-> skip_before_filter :authenticate_user!, :acl_verifyroute!, :only => [:show]
+> class PostsController < ApplicationController <br>
+> skip_before_filter :authenticate_user!, :acl_verifyroute!, :only => [:show] <br>
 > ...
 
 read more about skip_before_filter at 
@@ -106,16 +106,16 @@ These method will return true if there is a permission defined in `/acl-mgr` pag
 
 **menuitem_for - usage**
 
-> <% menuitem_for posts_show_path do %>
-> &lt;a href="<%= @url %>"&gt;Show Posts&lt;/a&gt;
+> <% menuitem_for posts_show_path do %> <br>
+> &lt;a href="<%= @url %>"&gt;Show Posts&lt;/a&gt; <br>
 > <% end %>
 
 The above script will check for permission of `posts#show` action for `current_user`. If the permission is false, the link simply not written in the page.
 
 **element_for - usage**
 
-> <% element_for '@PostsView' do %>
-> &lt;div&gt;< p>All Posts< /p>&lt;/div&gt;
+> <% element_for '@PostsView' do %> <br>
+> &lt;div&gt;< p>All Posts< /p>&lt;/div&gt; <br>
 > <% end %>
 
 This method works similarly like `menuitem_for` method. But, it is for HTML elements, if the permission is false, the &lt;div&gt; will not be shown.
