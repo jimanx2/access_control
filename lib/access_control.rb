@@ -27,11 +27,15 @@ module AccessControl
     
     protected
     def get_named_route(url)
-      begin 
-        route_path = access_control.routes.recognize_path(url)
-      rescue
-        route_path = Rails.application.routes.recognize_path(url)
+      route_path = []
+      [:get, :post, :delete, :put, :patch].each do |method|
+        begin
+          route_path = Rails.application.routes.recognize_path(url, :method => method) rescue AccessControl::Engine.routes.recognize_path(url, :method => method)
+        rescue
+          next
+        end
       end
+      
       route_path = "#{route_path[:controller]}##{route_path[:action]}"
     end
     
