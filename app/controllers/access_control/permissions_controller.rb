@@ -19,9 +19,12 @@ module AccessControl
       end
       
       params[:route_path].each do |rp|
-        req = params[:requester_type].split('|')
-        permission = Permission.new(:requester_type => req[1], :requester_id => req[0], :route_path => rp, :allow => params[:allow])
-        permission.save
+        allow = to_bool(params[:allow].to_s)
+        params[:requester_type].each do |requester|
+          req = requester.split('|')
+          permission = Permission.new(:requester_type => req[1], :requester_id => req[0], :route_path => rp, :allow => allow)
+          permission.save
+        end
       end
       redirect_to request.referer 
     end
@@ -32,9 +35,9 @@ module AccessControl
     def update
       permission = Permission.find(params[:id])
       raise ActiveRecord::RecordNotFound if permission.nil?
-      permission.allow = !permission.allow
-      if permission.save
-        render text: permission.allow ? "ALLOWED" : "DENIED"
+      permission.allow = !permission.allow?
+      if permission.save!
+        render text: permission.allow? ? "ALLOWED" : "DENIED"
       else
         render text: "ERROR"
       end
@@ -44,6 +47,14 @@ module AccessControl
       permission = Permission.find(params[:id])
       raise ActiveRecord::RecordNotFound if permission.nil?
       redirect_to permissions_path if permission.destroy
+    end
+    
+    private
+    def to_bool str
+      return true if str =~ (/^(true|t|yes|y|1)$/i)
+      return false if str.empty? || str =~ (/^(false|f|no|n|0)$/i)
+
+      raise ArgumentError.new "invalid value: #{str}"
     end
   end
 end

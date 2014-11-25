@@ -22,8 +22,8 @@
     <div class="form-group">
       <label class="col-xs-4">Requester</label>
       <div class="col-xs-8">
-        <select name="requester_type" data-ride="chosen">
-        <% @requester.each do |rq|%>
+        <select name="requester_type[]" data-ride="chosen" multiple>
+          <% @requester.each do |rq|%>
         <option value="<%= rq.id %>|<%= rq.class.name %>"><%= rq.name %></option>
         <% end %>
         </select>
